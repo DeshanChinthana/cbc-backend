@@ -1,94 +1,91 @@
-import Product  from "../models/product.js";
+import Product from "../models/product.js";
 
-export function getProduct(req,res){
+export function getProduct(req, res) {
 
   Product.find().then(
-
-    (productList)=>{
+    (productList) => {
       res.status(200).json({
-        list : productList
-      }) 
+        list: productList
+      })
     }
   ).catch(
-    (err)=>{
+    (err) => {
       res.json({
-        message : "Error"
+        message: "Error"
       })
     }
   )
 }
 
-export function createProduct(req,res){
+export function createProduct(req, res) {
 
   console.log(req.user)
 
-  if(req.user == null){
+  if (req.user == null) {
     res.json({
-      message : "You are not logged in"
+      message: "You are not logged in"
     })
     return
   }
 
-  
-
   const product = new Product(req.body)
 
-  product.save().then(()=>{
+  product.save().then(() => {
     res.json({
       message: "Product created"
     })
-  }).catch(()=>{
+  }).catch(() => {
     res.json({
       message: "Product not created"
     })
   })
 }
 
-export function deleteProduct(req,res){
+export function deleteProduct(req, res) {
 
-  Product.deleteOne({name : req.params.name}).then(
-    ()=>{
+  Product.deleteOne({ name: req.params.name }).then(
+    () => {
       res.json(
         {
-          message : "Product deleted successfully"
+          message: "Product deleted successfully"
         }
       )
     }
   ).catch(
-    ()=>{
+    () => {
       res.json(
         {
-          message : "Product not deleted"
+          message: "Product not deleted"
         }
       )
     }
   )
 }
 
-export function getProductByName(req,res){
+export function getProductByName(req, res) {
 
   const name = req.params.name;
 
-  Product.find({name : name}).then(
+  Product.find({ name: name }).then(
 
-    (productList)=>{
+    (productList) => {
 
-      if(productList.length == 0){
+      if (productList.length == 0) {
         res.json({
-          message : "Product not found"
+          message: "Product not found"
         })
-      }else{
+      } else {
         res.json({
-          list : productList
+          list: productList
         })
       }
 
-      
+
     }
   ).catch(
-    ()=>{
+    () => {
       res.json({
-        message : "Product not found"
+        message: "Product not found"
       })
     }
   )
