@@ -1,21 +1,35 @@
 import Product from "../models/product.js";
 
-export function getProduct(req, res) {
+export async function getProduct(req,res){
 
-  Product.find().then(
-    (productList) => {
-      res.status(200).json({
-        list: productList
-      })
-    }
-  ).catch(
-    (err) => {
-      res.json({
-        message: "Error"
-      })
-    }
-  )
+  try{
+    const productList = await Product.find()
+
+    res.json({
+      list : productList
+    })
+  }catch(e){
+    res.json({
+      message : "Error"
+    })
+  }
 }
+// export function getProduct(req, res) {
+
+//   Product.find().then(
+//     (productList) => {
+//       res.status(200).json({
+//         list: productList
+//       })
+//     }
+//   ).catch(
+//     (err) => {
+//       res.json({
+//         message: "Error"
+//       })
+//     }
+//   )
+// }
 
 export function createProduct(req, res) {
 
@@ -67,9 +81,7 @@ export function getProductByName(req, res) {
   const name = req.params.name;
 
   Product.find({ name: name }).then(
-
     (productList) => {
-
       if (productList.length == 0) {
         res.json({
           message: "Product not found"
@@ -79,8 +91,6 @@ export function getProductByName(req, res) {
           list: productList
         })
       }
-
-
     }
   ).catch(
     () => {

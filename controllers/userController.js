@@ -22,7 +22,6 @@ export function createUser(req,res){
       message: "User not created"
     })
   })
-  
 }
 
 export function loginUser(req,res){
@@ -30,15 +29,11 @@ export function loginUser(req,res){
   User.find({email : req.body.email}).then(
     (users)=>{
       if(users.length == 0){
-
         res.json({
           message: "User not found"
         })
-
       }else{
-
         const user = users[0]
-
         const isPasswordCorrect = bcrypt.compareSync(req.body.password,user.password)
 
         if(isPasswordCorrect){
@@ -65,4 +60,17 @@ export function loginUser(req,res){
       }
     }
   )
+}
+
+export async function getUser(req,res){
+  try{
+    const userList = await User.find()
+    res.json({
+      list : userList
+    })
+  }catch(e){
+    res.json({
+      message : "Error Retrieving Users"
+    })
+  }
 }

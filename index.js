@@ -11,9 +11,7 @@ dotenv.config()
 const app = express();
 
 const mongoUrl = process.env.MONGO_DB_URI;
-
 mongoose.connect(mongoUrl,{})
-
 const connection = mongoose.connection;
 
 connection.once("open",()=>{
@@ -21,7 +19,6 @@ connection.once("open",()=>{
 })
 
 app.use(bodyParser.json())
-
 app.use(
 
   (req,res,next)=>{
@@ -40,11 +37,11 @@ app.use(
     }
     next()
   }
-
 )
 
-app.use("/api/products",productRouter)
-app.use("/api/users",userRouter)
+app.use("/api/products", productRouter)
+app.use("/api/users", userRouter)
+
 app.listen(
   5000,
   ()=>{
