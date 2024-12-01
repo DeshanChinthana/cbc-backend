@@ -9,27 +9,37 @@ export async function createUser(req, res) {
   try {
     const newUserData = req.body;
 
-    // Hash the password asynchronously
-    newUserData.password = await bcrypt.hash(newUserData.password, 10);
+    if (newUserData.type == "admin") { // check if newly creating user account's user type is "admin"
+      if (req.user == null) { // check if user logged-in
+        res.json({
+          message: "Please login as administrator to create admin accounts"
+        })
+        return
+      }
+      if (req.user.type != "admin") { //check if logged user is an admin
+        res.json({
+          message: "Please login as administrator to create admin accounts"
+        })
+        return
+      }
+    }
 
-    // Create a new user instance
-    const user = new User(newUserData);
+    newUserData.password = await bcrypt.hash(newUserData.password, 10); // Hash the password asynchronously
+    const user = new User(newUserData); // Create a new user instance
+    await user.save(); // Save the user to the database
 
-    // Save the user to the database
-    await user.save();
-
-    // Send a success response
     res.json({
       message: "User created"
     });
   } catch (error) {
-    // Send an error response
     res.json({
       message: "User not created",
       error: error.message
     });
   }
 }
+
+// is the promise created using .then
 // export function createUser(req,res){
 
 //   const newUserData = req.body
