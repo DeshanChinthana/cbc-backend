@@ -19,7 +19,6 @@ connection.once("open",()=>{
 
 app.use(bodyParser.json())
 app.use(
-
   (req,res,next)=>{
 
     const token = req.header("Authorization")?.replace("Bearer ","")
@@ -27,11 +26,9 @@ app.use(
 
     if(token != null){
       jwt.verify(token,process.env.JWT_SECRET, (error,decoded)=>{
-
         if(!error){
           req.user = decoded        
         }
-
       })
     }
     next()
