@@ -91,3 +91,27 @@ export async function loginUser(req, res) {
     });
   }
 }
+
+// For checking user is an admin
+export function isAdmin(req){
+  if(req.user==null){
+    return false
+  }
+  if(req.user.type != "admin"){
+    return false
+  }
+  return true
+}
+
+// For checking user is a customer
+export function isCustomer(req){
+  if(req.user==null){
+    return false
+  }
+  if(req.user.type != "customer"){
+    return false
+  }
+  return true
+}
+
+// dc@example.com, admin123
