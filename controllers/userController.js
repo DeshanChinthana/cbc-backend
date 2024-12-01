@@ -5,54 +5,77 @@ import dotenv from "dotenv";
 
 dotenv.config()
 
-export function createUser(req,res){
+export async function createUser(req, res) {
+  try {
+    const newUserData = req.body;
 
-  const newUserData = req.body
+    // Hash the password asynchronously
+    newUserData.password = await bcrypt.hash(newUserData.password, 10);
 
-  newUserData.password = bcrypt.hashSync(newUserData.password, 10)  
+    // Create a new user instance
+    const user = new User(newUserData);
 
-  const user = new User(newUserData)
+    // Save the user to the database
+    await user.save();
 
-  user.save().then(()=>{
+    // Send a success response
     res.json({
       message: "User created"
-    })
-  }).catch((error)=>{
-    res.json({      
-      message: "User not created"
-    })
-  })
+    });
+  } catch (error) {
+    // Send an error response
+    res.json({
+      message: "User not created",
+      error: error.message
+    });
+  }
 }
+// export function createUser(req,res){
 
-export function loginUser(req,res){
+//   const newUserData = req.body
+//   newUserData.password = bcrypt.hashSync(newUserData.password, 10)  
+//   const user = new User(newUserData)
 
-  User.find({email : req.body.email}).then(
-    (users)=>{
-      if(users.length == 0){
+//   user.save().then(()=>{
+//     res.json({
+//       message: "User created"
+//     })
+//   }).catch((error)=>{
+//     res.json({      
+//       message: "User not created"
+//     })
+//   })
+// }
+
+export function loginUser(req, res) {
+
+  User.find({ email: req.body.email }).then(
+    (users) => {
+      if (users.length == 0) {
         res.json({
           message: "User not found"
         })
-      }else{
+      } else {
         const user = users[0]
-        const isPasswordCorrect = bcrypt.compareSync(req.body.password,user.password)
+        const isPasswordCorrect = bcrypt.compareSync(req.body.password, user.password)
 
-        if(isPasswordCorrect){
+        if (isPasswordCorrect) {
 
           const token = jwt.sign({
-            email : user.email,
-            firstName : user.firstName,
-            lastName : user.lastName,
-            isBlocked : user.isBlocked,
-            type : user.type,
-            profilePicture : user.profilePicture
-          } , process.env.JWT_SECRET)
-          
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            isBlocked: user.isBlocked,
+            type: user.type,
+            profilePicture: user.profilePicture
+          }, process.env.JWT_SECRET)
+
           res.json({
             message: "User logged in",
             token: token
           })
-          
-        }else{
+
+        } else {
           res.json({
             message: "User not logged in (wrong password)"
           })
@@ -60,17 +83,4 @@ export function loginUser(req,res){
       }
     }
   )
-}
-
-export async function getUser(req,res){
-  try{
-    const userList = await User.find()
-    res.json({
-      list : userList
-    })
-  }catch(e){
-    res.json({
-      message : "Error Retrieving Users"
-    })
-  }
 }

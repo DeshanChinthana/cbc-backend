@@ -1,7 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import mongoose from 'mongoose';
-import productRouter from './routes/productRouter.js';
 import userRouter from './routes/userRouter.js';
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -27,7 +26,7 @@ app.use(
     console.log(token)
 
     if(token != null){
-      jwt.verify(token,process.env.JWT_SECRET , (error,decoded)=>{
+      jwt.verify(token,process.env.JWT_SECRET, (error,decoded)=>{
 
         if(!error){
           req.user = decoded        
@@ -39,7 +38,6 @@ app.use(
   }
 )
 
-app.use("/api/products", productRouter)
 app.use("/api/users", userRouter)
 
 app.listen(
