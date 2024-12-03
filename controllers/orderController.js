@@ -41,3 +41,16 @@ export async function createOrder(req, res) {
         })
     }
 }
+
+export async function getOrders(req,res){
+    try{
+      const orders = await Order.find({email : req.user.email}) // get the orders which are email equal to the logged in user's email (That user's orders)
+  
+      res.status(200).json(orders)
+  
+    }catch(error){
+      res.status(500).json({
+        message: error.message
+      })
+    }
+  }
