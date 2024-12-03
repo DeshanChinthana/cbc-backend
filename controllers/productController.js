@@ -13,7 +13,7 @@ export async function createProduct(req, res) {
     const product = new Product(newProductData); // Create a new product instance
     await product.save(); // Save the product to the database
 
-    res.json({
+    res.status(200).json({
       message: "Product created",
     });
   } catch (error) {
@@ -48,7 +48,7 @@ export async function deleteProduct(req, res) {
       });
     }
 
-    res.json({
+    res.status(200).json({
       message: "Product deleted successfully",
     });
   } catch (error) {
