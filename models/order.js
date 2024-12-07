@@ -10,26 +10,48 @@ const orderSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    // user: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: "users", // Reference to the 'users' collection
+    //     required: true
+    // },
     orderedItems: [
         {
-            name: {
-                type: String,
-                required: true
-            },
-            price: {
-                type: Number,
+            product: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "products", // Reference to the 'products' collection
                 required: true
             },
             quantity: {
                 type: Number,
                 required: true
             },
-            image: {
-                type: String,
+            price: {
+                type: Number,
                 required: true
-            }
+            },
         }
     ],
+    // orderedItems: [
+    //     {
+    //         name: {
+    //             type: String,
+    //             required: true
+    //         },
+    //         price: {
+    //             type: Number,
+    //             required: true
+    //         },
+    //         quantity: {
+    //             type: Number,
+    //             required: true
+    //         },
+    //         image: {
+    //             type: String,
+    //             required: true
+    //         }
+    //     }
+    // ],
     date: {
         type: Date,
         default: Date.now
