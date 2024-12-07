@@ -1,6 +1,7 @@
 import Review from "../models/review.js";
 import Product from "../models/product.js";
 import { isCustomer } from "./userController.js";
+import Order from "../models/order.js";
 
 export async function createReview(req, res) {
     try {
@@ -16,6 +17,17 @@ export async function createReview(req, res) {
         if (!product) {
             return res.status(404).json({
                 message: "Product not found."
+            })
+        }
+
+        const orderedProduct = await Order.findOne({ // check if user ordered this product
+            orderId: orderedProduct.orderId,
+            email: orderedProduct.email,
+            orderedItems: orderedProduct.orderedItems
+        })
+        if (orderedProduct) {
+            return res.status(409).json({ // 409 = conflict
+                message: "You haven't ordered this product."
             })
         }
 
