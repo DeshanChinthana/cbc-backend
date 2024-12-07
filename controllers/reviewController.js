@@ -53,7 +53,7 @@ export async function hideReview(req, res) {
         }
 
         const reviewData = req.body // Extract review data from request body
-        // const review = await Review.findById(reviewData.)
+        // const review = await Review.findById(reviewData.reiviewId)
 
 
     } catch (error) {
