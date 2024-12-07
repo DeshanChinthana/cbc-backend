@@ -53,8 +53,20 @@ export async function hideReview(req, res) {
         }
 
         const reviewData = req.body // Extract review data from request body
-        const review = await Review.findById(reviewData.reiviewId)
+        const review = await Review.findById(reviewData.reiviewId) // Find the review by ID
+        if (review) {
+            return res.status(404).json({
+                message: "Review not found"
+            })
+        }
 
+        review.hidden = true // Set the review's hidden flag to true
+        await review.save() // Save the updated (hidden state) review
+
+        return res.status(200).json({
+            message: "Review hidden successfully.",
+            review,
+        })
 
     } catch (error) {
         req.status(500).json({
