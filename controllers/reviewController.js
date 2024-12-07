@@ -26,7 +26,7 @@ export async function createReview(req, res) {
             orderedItems: orderedProduct.orderedItems
         })
         if (orderedProduct) {
-            return res.status(409).json({ // 409 = conflict
+            return res.status(404).json({
                 message: "You haven't ordered this product."
             })
         }
