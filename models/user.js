@@ -31,7 +31,6 @@ const userSchema = mongoose.Schema({
     default : "https://img.freepik.com/free-vector/user-blue-gradient_78370-4692.jpg?t=st=1731770840~exp=1731774440~hmac=0f8ac074c2321289f63858728e073c0d5946ea6cb542c3b259a88e367a7dde25&w=740"
   }
 })
-
 const User = mongoose.model("users",userSchema)
 
 export default User;

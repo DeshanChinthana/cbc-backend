@@ -1,11 +1,9 @@
 import express from 'express';
-import { createProduct, deleteProduct, getProduct, getProductByName } from '../controllers/productController.js';
+import { createProduct, deleteProduct, getProduct } from '../controllers/productController.js';
 
 const productRouter = express.Router();
 
 productRouter.get('/',getProduct);
-
-
 
 productRouter.get("/filter", (req,res)=>{
   res.json({
@@ -13,12 +11,9 @@ productRouter.get("/filter", (req,res)=>{
   })
 })
 
-productRouter.get("/:name",getProductByName)
-
-
 productRouter.post('/',createProduct);
-productRouter.delete("/:name",deleteProduct);
+productRouter.delete('/:productName', deleteProduct);
 
-
+// productRouter.get("/:name",getProductByName)
 
 export default productRouter;
