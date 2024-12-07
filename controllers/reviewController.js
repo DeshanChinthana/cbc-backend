@@ -12,17 +12,14 @@ export async function createReview(req, res) {
         }
 
         const newReviewData = req.body;
-
-        // validate product existence
-        const product = await Product.findById(newReviewData.productId)
+        const product = await Product.findById(newReviewData.productId) // validate product existence
         if (!product) {
             return res.status(404).json({
                 message: "Product not found."
             })
         }
 
-        // check if user already reviewed this product
-        const existingReview = await Review.findOne({
+        const existingReview = await Review.findOne({ // check if user already reviewed this product
             userId: newReviewData.userId,
             productId: newReviewData.productId
         })
@@ -38,6 +35,26 @@ export async function createReview(req, res) {
         res.status(200).json({
             message: "Review added successfully"
         })
+
+    } catch (error) {
+        req.status(500).json({
+            message: error.message
+        })
+    }
+}
+
+export async function hideReview(req, res) {
+    try {
+
+        if (!isAdmin) { // Check if the user is an admin
+            return res.status(401).json({
+                message: "You must be an admin to hide reviews. Login as admin.",
+            });
+        }
+
+        const reviewData = req.body // Extract review data from request body
+        // const review = await Review.findById(reviewData.)
+
 
     } catch (error) {
         req.status(500).json({
