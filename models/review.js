@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const reviewSchema = mongoose.Schema(
     {
+        reiviewId: {
+            type: String,
+            required: true,
+            unique: true
+        },
         userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "users", // Refers to the 'users' collection
