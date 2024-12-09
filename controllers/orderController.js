@@ -37,14 +37,15 @@ export async function createOrder(req, res) {
 
             if (!product) { // If the product is not found, send an error response and stop further execution.
                 res.status(404).json({
-                    message: "Product with the id " + newOrderData.orderedItems[i].productId + " is not found"
+                    message: `Product with the id ${newOrderData.orderedItems[i].productId} is not found` // An easy way to concatenation
+                    // message: "Product with the id " + newOrderData.orderedItems[i].productId + " is not found"
                 });
                 return;
             }
 
             if (product.stock < newOrderData.orderedItems[i].quantity) { // Check if there is enough stock for the order
                 res.status(400).json({
-                    message: `Insufficient stock for product: ${product.productName}`
+                    message: `Insufficient stock for product: ${product.productName}. Only ${product.stock} items are available.`
                 });
                 return;
             }
