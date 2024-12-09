@@ -26,7 +26,6 @@ export async function createOrder(req, res) {
             orderId = "CBC" + newNumber
         }
 
-        
         const newOrderData = req.body; // Get the incoming order data from the request body.
         
         const newProductArray = []; // Initialize an empty array to store detailed product information.
@@ -36,12 +35,22 @@ export async function createOrder(req, res) {
                 productId: newOrderData.orderedItems[i].productId
             });
 
-            if (product == null) { // If the product is not found, send an error response and stop further execution.
+            if (!product) { // If the product is not found, send an error response and stop further execution.
                 res.status(404).json({
                     message: "Product with the id " + newOrderData.orderedItems[i].productId + " is not found"
                 });
                 return;
             }
+
+            if (product.stock < newOrderData.orderedItems[i].quantity) { // Check if there is enough stock for the order
+                res.status(400).json({
+                    message: `Insufficient stock for product: ${product.productName}`
+                });
+                return;
+            }
+
+            product.stock -= newOrderData.orderedItems[i].quantity; // Decrease the product stock
+            await product.save(); // Save the updated stock to the database
 
             newProductArray[i] = { // Create a new object for the product with the required fields
                 name: product.productName,
