@@ -1,4 +1,5 @@
 import Order from "../models/order.js";
+import Product from "../models/product.js";
 import { isCustomer } from "./userController.js";
 
 export async function createOrder(req, res) {
@@ -25,7 +26,42 @@ export async function createOrder(req, res) {
             orderId = "CBC" + newNumber
         }
 
-        const newOrderData = req.body
+        const newOrderData = req.body; // Get the incoming order data from the request body.
+        
+        const newProductArray = []; // Initialize an empty array to store detailed product information.
+
+        for (let i = 0; i < newOrderData.orderedItems.length; i++) {
+            const product = await Product.findOne({ // Find the product in the database using the productId from the request.
+                productId: newOrderData.orderedItems[i].productId
+            });
+
+            if (!product) { // If the product is not found, send an error response and stop further execution.
+                res.status(404).json({
+                    message: "Product with the id " + newOrderData.orderedItems[i].productId + " is not found"
+                });
+                return;
+            }
+
+            if (product.stock < newOrderData.orderedItems[i].quantity) { // Check if there is enough stock for the order
+                res.status(400).json({
+                    message: `Insufficient stock for product: ${product.productName}`
+                });
+                return;
+            }
+
+            product.stock -= newOrderData.orderedItems[i].quantity; // Decrease the product stock
+            await product.save(); // Save the updated stock to the database
+
+            newProductArray[i] = { // Create a new object for the product with the required fields
+                name: product.productName,
+                price: product.price,
+                quantity: newOrderData.orderedItems[i].quantity,
+                image: product.images[0]
+            };
+        }
+
+        newOrderData.orderedItems = newProductArray; // Replace the orderedItems in the incoming data with the detailed product array.
+
         newOrderData.orderId = orderId // Combines the order ID and the user's email into the incoming order data (req.body) to prepare it for saving.
         newOrderData.email = req.user.email
 
