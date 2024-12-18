@@ -115,3 +115,4 @@ export function isCustomer(req){
 }
 
 // dc@example.com, admin123
+// dccustomer@example.com, user123
